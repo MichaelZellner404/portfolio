@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+Ich bin angehender ITler mit Fokus auf Technik, saubere Lösungen und moderne Designs.
+Mich interessiert nicht nur, dass etwas funktioniert – sondern dass es gut aussieht,
+performant ist und durchdacht wirkt.
+</p>
+</section>
+
+
+<section id="projects" class="reveal">
+<h2>Projekte</h2>
+<div class="cards">
+<div class="card">
+<h3>Portfolio Website</h3>
+<p>Moderne Onepage-Seite mit Animationen, Effekten und Fokus auf UX/UI.</p>
+</div>
+<div class="card">
+<h3>Hardware / Technik</h3>
+<p>Arbeiten mit Audio-Technik, Elektronik, Setups und praktischer Fehlersuche.</p>
+</div>
+<div class="card">
+<h3>Experimente</h3>
+<p>Kleine Tools, Tests, kreative Projekte und technisches Rumprobieren.</p>
+</div>
+</div>
+</section>
+
+
+<section id="skills" class="reveal">
+<h2>Skills</h2>
+<div class="skills">
+<span class="skill">HTML</span>
+<span class="skill">CSS</span>
+<span class="skill">JavaScript</span>
+<span class="skill">Hardware</span>
+<span class="skill">Audio-Technik</span>
+<span class="skill">Troubleshooting</span>
+<span class="skill">UI/UX Denken</span>
+</div>
+</section>
+
+
+<section id="contact" class="reveal">
+<h2>Kontakt</h2>
+<p>
+Interesse an Zusammenarbeit oder einfach Fragen?
+<br />
+<strong>E-Mail:</strong> deine@email.de
+</p>
+</section>
+
+
+<footer>
+© <span id="year"></span> [Dein Name] · IT Portfolio
+</footer>
+
+
+<script>
+// Scroll reveal
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+entries.forEach(e => e.isIntersecting && e.target.classList.add('active'));
+}, { threshold: 0.15 });
+reveals.forEach(r => observer.observe(r));
+
+
+// Card glow tracking
+document.querySelectorAll('.card').forEach(card => {
+card.addEventListener('mousemove', e => {
+const rect = card.getBoundingClientRect();
+card.style.setProperty('--x', e.clientX - rect.left + 'px');
+card.style.setProperty('--y', e.clientY - rect.top + 'px');
+});
+});
+
+
+// Year
+document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+
+</body>
+</html>
