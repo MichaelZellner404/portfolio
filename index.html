@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IT Portfolio | Fachinformatik-Enthusiast</title>
+    <title>IT Portfolio | Developer & Tech Enthusiast</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -28,6 +28,17 @@
             color: var(--text);
             overflow-x: hidden;
             line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+
+        html {
+            scroll-snap-type: y proximity;
+            scroll-behavior: smooth;
+        }
+
+        section {
+            scroll-snap-align: start;
+            scroll-snap-stop: normal;
         }
 
         /* Animated Background */
@@ -294,6 +305,22 @@
         section {
             padding: 5rem 5%;
             position: relative;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+        }
+
+        section.scrolling-fast {
+            transform: scale(0.95);
+        }
+
+        section.scroll-reveal {
+            opacity: 0;
+            transform: translateY(100px) rotateX(10deg);
+            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        section.scroll-reveal.active {
+            opacity: 1;
+            transform: translateY(0) rotateX(0deg);
         }
 
         .section-title {
@@ -321,6 +348,12 @@
             width: 100%;
             height: 3px;
             background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            animation: wave 3s ease-in-out infinite;
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: scaleX(1); }
+            50% { transform: scaleX(1.2); }
         }
 
         /* Skills Grid */
@@ -339,6 +372,32 @@
             transition: all 0.3s;
             position: relative;
             overflow: hidden;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .skill-card:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .skill-card:nth-child(3) {
+            animation-delay: 1s;
+        }
+
+        .skill-card:nth-child(4) {
+            animation-delay: 1.5s;
+        }
+
+        .skill-card:nth-child(5) {
+            animation-delay: 2s;
+        }
+
+        .skill-card:nth-child(6) {
+            animation-delay: 2.5s;
         }
 
         .skill-card::before {
@@ -366,6 +425,18 @@
             font-size: 3rem;
             margin-bottom: 1rem;
             display: block;
+            transition: transform 0.3s ease;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .skill-card:hover .skill-icon {
+            transform: scale(1.2) rotate(360deg);
+            transition: transform 0.6s ease;
         }
 
         .skill-card h3 {
@@ -396,6 +467,18 @@
             transition: all 0.4s;
             cursor: pointer;
             position: relative;
+            animation: cardRotate 10s ease-in-out infinite;
+        }
+
+        @keyframes cardRotate {
+            0%, 100% { transform: perspective(1000px) rotateY(0deg) rotateX(0deg); }
+            25% { transform: perspective(1000px) rotateY(2deg) rotateX(1deg); }
+            50% { transform: perspective(1000px) rotateY(0deg) rotateX(-1deg); }
+            75% { transform: perspective(1000px) rotateY(-2deg) rotateX(1deg); }
+        }
+
+        .project-card:nth-child(odd) {
+            animation-direction: reverse;
         }
 
         .project-card::after {
@@ -790,13 +873,13 @@
                 Interesse an einer Zusammenarbeit? Lass uns sprechen!
             </p>
             <div class="contact-info">
-                <a href="mailto:michael.m.zellner@outlook.de" class="contact-item">
+                <a href="mailto:deine.email@example.com" class="contact-item">
                     <span>📧</span>
-                    <span>michael.m.zellner@outlook.de</span>
+                    <span>deine.email@example.com</span>
                 </a>
-                <a href="tel:+491781428293" class="contact-item">
+                <a href="tel:+49123456789" class="contact-item">
                     <span>📱</span>
-                    <span>+49 178 142 82 93</span>
+                    <span>+49 123 456 789</span>
                 </a>
                 <a href="https://linkedin.com" class="contact-item">
                     <span>💼</span>
@@ -854,9 +937,10 @@
         document.addEventListener('mousemove', (e) => {
             const trail = document.createElement('div');
             trail.className = 'cursor-trail';
-            trail.style.left = e.pageX + 'px';
-            trail.style.top = e.pageY + 'px';
+            trail.style.left = e.clientX + 'px';
+            trail.style.top = e.clientY + 'px';
             trail.style.opacity = '0.6';
+            trail.style.position = 'fixed';
             document.body.appendChild(trail);
 
             trails.push(trail);
@@ -906,6 +990,134 @@
                 hero.style.opacity = 1 - (scrolled / 600);
             }
         });
+
+        // Scroll Speed Detection and Animations (TikTok/Instagram style)
+        let lastScrollTop = 0;
+        let scrollSpeed = 0;
+        let scrollTimer;
+
+        window.addEventListener('scroll', () => {
+            const currentScrollTop = window.pageYOffset;
+            scrollSpeed = Math.abs(currentScrollTop - lastScrollTop);
+            lastScrollTop = currentScrollTop;
+
+            // Add fast scrolling effect to sections
+            document.querySelectorAll('section').forEach(section => {
+                if (scrollSpeed > 50) {
+                    section.classList.add('scrolling-fast');
+                } else {
+                    section.classList.remove('scrolling-fast');
+                }
+            });
+
+            // Clear the timer
+            clearTimeout(scrollTimer);
+            scrollTimer = setTimeout(() => {
+                scrollSpeed = 0;
+                document.querySelectorAll('section').forEach(section => {
+                    section.classList.remove('scrolling-fast');
+                });
+            }, 100);
+        }, { passive: true });
+
+        // Advanced Scroll Reveal with Stagger Effect
+        const advancedObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('active');
+                    }, index * 100);
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '-50px'
+        });
+
+        document.querySelectorAll('section').forEach(section => {
+            section.classList.add('scroll-reveal');
+            advancedObserver.observe(section);
+        });
+
+        // Cards Animation on Scroll with 3D Effect
+        const cardsObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    const delay = index * 100;
+                    setTimeout(() => {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0) rotateX(0deg)';
+                    }, delay);
+                }
+            });
+        }, {
+            threshold: 0.2,
+            rootMargin: '0px'
+        });
+
+        document.querySelectorAll('.skill-card, .project-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(80px) rotateX(15deg)';
+            el.style.transition = 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            cardsObserver.observe(el);
+        });
+
+        // Smooth Zoom Effect on Scroll
+        let lastKnownScrollPosition = 0;
+        let ticking = false;
+
+        function updateZoom(scrollPos) {
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                const sectionCenter = rect.top + rect.height / 2;
+                const windowCenter = window.innerHeight / 2;
+                const distance = Math.abs(sectionCenter - windowCenter);
+                const maxDistance = window.innerHeight;
+                const scale = 1 - (distance / maxDistance) * 0.1;
+                
+                if (scale > 0.9 && scale <= 1) {
+                    section.style.transform = `scale(${scale})`;
+                } else if (scale > 1) {
+                    section.style.transform = 'scale(1)';
+                }
+            });
+        }
+
+        window.addEventListener('scroll', () => {
+            lastKnownScrollPosition = window.scrollY;
+
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    updateZoom(lastKnownScrollPosition);
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }, { passive: true });
+
+        // Parallax Effect for Background Elements
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            
+            // Parallax for background
+            const bgAnimation = document.querySelector('.bg-animation');
+            if (bgAnimation) {
+                bgAnimation.style.transform = `translateY(${scrolled * 0.3}px)`;
+            }
+
+            // Parallax for grid
+            const grid = document.querySelector('.grid-overlay');
+            if (grid) {
+                grid.style.transform = `translateY(${scrolled * 0.15}px)`;
+            }
+
+            // Parallax for skill icons
+            document.querySelectorAll('.skill-icon').forEach((icon, index) => {
+                const speed = 0.5 + (index * 0.1);
+                icon.style.transform = `translateY(${scrolled * speed * 0.01}px) rotate(${scrolled * 0.05}deg)`;
+            });
+        }, { passive: true });
     </script>
 </body>
 </html>
